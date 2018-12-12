@@ -37,6 +37,7 @@ if common.in_table(ngx.var.upstream_cache_status, cache_status) then
 end
 
 common.incr_or_create(stats, common.key({group, 'status', common.get_status_code_class(status)}), 1)
+common.incr_or_create(stats, common.key({group, 'status', common.get_user_status_code_class(status)}), 1)
 
 -- Traffic being sent to and from the client
 common.update(stats, common.key({group, 'traffic', 'received'}), ngx.var.request_length)

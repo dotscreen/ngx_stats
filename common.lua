@@ -76,6 +76,29 @@ function _M.get_status_code_class(status)
 end
 
 
+function _M.get_user_status_code_class(status)
+  local user = ngx.var.remote_user
+  if user == nil or user == '' then
+      user = "usernotfound"
+  end
+  if status:sub(1,1) == '1' then
+      return "1xx" .. "_" .. user
+  elseif status:sub(1,1) == '2' then
+      return "2xx" .. "_" .. user
+  elseif status:sub(1,1) == '3' then
+      return "3xx" .. "_" .. user
+  elseif status == '429' then
+      return "429" .. "_" .. user
+  elseif status:sub(1,1) == '4' then
+      return "4xx" .. "_" .. user
+  elseif status:sub(1,1) == '5' then
+      return "5xx" .. "_" .. user
+  else
+      return "xxx" .. "_" .. user
+  end
+end
+
+
 function _M.update(stats, key, value)
     stats:set(key, value)
 end
