@@ -3,6 +3,11 @@ local stats = ngx.shared.ngx_stats;
 local group = ngx.var.stats_group
 local req_time = (tonumber(ngx.now() - ngx.req.start_time()) * 1000)
 local status = tostring(ngx.status)
+local status_code_class = common.get_status_code_class(status)
+local remote_user = ngx.var.remote_user
+if remote_user == nil or remote_user == "" then
+    remote_user = 'unknown_user'
+end
 
 -- Geral stats
 local upstream_response_time = tonumber(ngx.var.upstream_response_time)
@@ -36,8 +41,8 @@ if common.in_table(ngx.var.upstream_cache_status, cache_status) then
     common.incr_or_create(stats, common.key({group, 'cache', status}), 1)
 end
 
-common.incr_or_create(stats, common.key({group, 'status', common.get_status_code_class(status)}), 1)
-common.incr_or_create(stats, common.key({group, 'status', common.get_user_status_code_class(status)}), 1)
+common.incr_or_create(stats, common.key({group, 'status', status_code_class}), 1)
+common.incr_or_create(stats, common.key({group, 'status_user_' .. status_code_class, remote_user}), 1)
 
 -- Traffic being sent to and from the client
 common.update(stats, common.key({group, 'traffic', 'received'}), ngx.var.request_length)
