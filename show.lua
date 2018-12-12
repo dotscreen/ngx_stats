@@ -1,5 +1,5 @@
 local stats = ngx.shared.ngx_stats;
-local keys = stats:get_keys()
+local keys = stats:get_keys(8192)
 local response = {}
 
 for k,v in pairs(keys) do
