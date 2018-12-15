@@ -64,8 +64,6 @@ function _M.get_status_code_class(status)
       return "2xx"
   elseif status:sub(1,1) == '3' then
       return "3xx"
-  elseif status == '429' then
-      return "429"
   elseif status:sub(1,1) == '4' then
       return "4xx"
   elseif status:sub(1,1) == '5' then
